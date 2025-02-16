@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= guild.name %> - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="/js/dashboard.js" defer></script>
+    <style>
+        :root {
+            --primary-color: #5865F2;
+            --bg-color: #2F3136;
+            --card-bg: #36393F;
+            --text-color: #FFFFFF;
+            --text-secondary: #B9BBBE;
+            --success-color: #57F287;
+            --warning-color: #FEE75C;
+            --danger-color: #F24B4B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .server-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+        }
+
+        .server-info h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .settings-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+
+        .settings-card h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--bg-color);
+            border: 1px solid var(--text-secondary);
+            border-radius: 5px;
+            color: var(--text-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #4752c4;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: var(--text-secondary);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 1rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .checkbox input {
+            width: auto;
+        }
+
+        .settings-card {
+            position: relative;
+        }
+
+        .settings-card h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+
+        .status-enabled {
+            background-color: var(--success-color);
+            color: #000;
+        }
+
+        .status-disabled {
+            background-color: var(--text-secondary);
+            color: var(--text-color);
+        }
+
+        .error-alert {
+            background-color: var(--danger-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <% if (req.query.error) { %>
+            <div class="alert alert-danger">
+                ❌ <%= req.query.error %>
+            </div>
+        <% } %>
+        
+        <% if (req.query.success) { %>
+            <div class="alert alert-success">
+                ✅ <%= req.query.success %>
+            </div>
+        <% } %>
+
+        <% if (error) { %>
+            <div class="error-alert">
+                ⚠️ <%= error %>
+            </div>
+        <% } %>
+        <div class="header">
+            <div class="header-left">
+                <a href="/" class="back-button">← Geri</a>
+                <% if (guild.icon) { %>
+                    <img src="https://cdn.discordapp.com/icons/<%= guild.id %>/<%= guild.icon %>.png" alt="<%= guild.name %>" class="server-icon">
+                <% } else { %>
+                    <div class="server-icon" style="background: #7289da; display: flex; align-items: center; justify-content: center;">
+                        <%= guild.name.charAt(0) %>
+                    </div>
+                <% } %>
+                <div class="server-info">
+                    <h1><%= guild.name %></h1>
+                    <p>Sunucu Ayarları</p>
+                </div>
+            </div>
+            
+            <div class="user-info">
+                <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="Avatar" class="user-avatar">
+                <span><%= user.username %></span>
+                <a href="/logout" class="logout-btn">Çıkış Yap</a>
+            </div>
+        </div>
+
+        <div class="settings-grid">
+            <!-- Karşılama Ayarları Bölümü -->
+            <div class="settings-card">
+                <h2>Karşılama Ayarları</h2>
+                <form action="/set-channels" method="POST">
+                    <input type="hidden" name="guildId" value="<%= guild.id %>">
+                    
+                    <div class="form-group">
+                        <label for="welcomeChannel">Karşılama Kanalı</label>
+                        <select name="welcome" id="welcomeChannel">
+                            <option value="">Seçiniz...</option>
+                            <% channels.forEach(channel => { %>
+                                <option value="<%= channel.id %>" 
+                                    <%= settings?.welcomeChannelId === channel.id ? 'selected' : '' %>>
+                                    #<%= channel.name %>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="goodbyeChannel">Uğurlama Kanalı</label>
+                        <select name="goodbye" id="goodbyeChannel">
+                            <option value="">Seçiniz...</option>
+                            <% channels.forEach(channel => { %>
+                                <option value="<%= channel.id %>"
+                                    <%= settings?.goodbyeChannelId === channel.id ? 'selected' : '' %>>
+                                    #<%= channel.name %>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </form>
+            </div>
+
+            <div class="settings-card">
+                <h2>Bot Ayarları</h2>
+                <form action="/server/<%= guild.id %>/settings" method="POST">
+                    <div class="form-group">
+                        <label for="prefix">Komut Öneki</label>
+                        <input type="text" id="prefix" name="prefix" value="<%= settings.prefix || '!' %>" placeholder="Örn: !">
+                    </div>
+
+                    <button type="submit">Kaydet</button>
+                </form>
+            </div>
+
+            <!-- Moderasyon Ayarları -->
+            <div class="settings-card">
+                <h2>🛡️ Moderasyon Ayarları</h2>
+                <form action="/server/<%= guild.id %>/settings/moderation" method="POST">
+                    <div class="form-group">
+                        <label for="modLogChannel">Moderasyon Log Kanalı</label>
+                        <select name="modLogChannel" id="modLogChannel">
+                            <option value="">Kanal Seçin...</option>
+                            <% channels.forEach(channel => { %>
+                                <option value="<%= channel.id %>" 
+                                    <%= settings?.moderation?.logChannel === channel.id ? 'selected' : '' %>>
+                                    #<%= channel.name %>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Moderasyon Komutları</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox">
+                                <input type="checkbox" name="enableKick" 
+                                    <%= settings?.moderation?.enableKick ? 'checked' : '' %>>
+                                <span class="command-name">Kick Komutu</span>
+                                <span class="command-info">(!kick @kullanıcı [sebep])</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="enableBan" 
+                                    <%= settings?.moderation?.enableBan ? 'checked' : '' %>>
+                                <span class="command-name">Ban Komutu</span>
+                                <span class="command-info">(!ban @kullanıcı [sebep])</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="enableWarn" 
+                                    <%= settings?.moderation?.enableWarn ? 'checked' : '' %>>
+                                <span class="command-name">Uyarı Komutu</span>
+                                <span class="command-info">(!warn @kullanıcı [sebep])</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="enableMute" 
+                                    <%= settings?.moderation?.enableMute ? 'checked' : '' %>>
+                                <span class="command-name">Susturma Komutu</span>
+                                <span class="command-info">(!mute @kullanıcı [süre] [sebep])</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="enableUnban" 
+                                    <%= settings?.moderation?.enableUnban ? 'checked' : '' %>>
+                                <span class="command-name">Ban Kaldırma Komutu</span>
+                                <span class="command-info">(!unban kullanıcı_id [sebep])</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Otomatik Moderasyon</label>
+                        <div class="settings-group">
+                            <label class="setting-item">
+                                <span class="setting-name">Otomatik Moderasyon</span>
+                                <input type="checkbox" name="enableAutoMod" 
+                                    <%= settings?.moderation?.enableAutoMod ? 'checked' : '' %>>
+                            </label>
+                            <label class="setting-item">
+                                <span class="setting-name">Spam Koruması</span>
+                                <input type="checkbox" name="enableSpamProtection" 
+                                    <%= settings?.moderation?.enableSpamProtection ? 'checked' : '' %>>
+                            </label>
+                            <label class="setting-item">
+                                <span class="setting-name">Küfür Filtresi</span>
+                                <input type="checkbox" name="enableSwearFilter" 
+                                    <%= settings?.moderation?.enableSwearFilter ? 'checked' : '' %>>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Uyarı Limitleri</label>
+                        <div class="settings-group">
+                            <label class="setting-item">
+                                <span class="setting-name">Kick için uyarı limiti</span>
+                                <input type="number" name="warnKickLimit" min="1" max="10" 
+                                    value="<%= settings?.moderation?.warningLimits?.kick || 3 %>"
+                                    class="small-input">
+                            </label>
+                            <label class="setting-item">
+                                <span class="setting-name">Ban için uyarı limiti</span>
+                                <input type="number" name="warnBanLimit" min="1" max="15" 
+                                    value="<%= settings?.moderation?.warningLimits?.ban || 5 %>"
+                                    class="small-input">
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit">Kaydet</button>
+                </form>
+            </div>
+
+            <!-- Otomatik Rol Ayarları -->
+            <div class="settings-card">
+                <h2> Otomatik Rol</h2>
+                <form action="/server/<%= guild.id %>/settings/autorole" method="POST">
+                    <div class="form-group">
+                        <label class="checkbox">
+                            <input type="checkbox" name="enabled" <%= settings.autoRole?.enabled ? 'checked' : '' %>>
+                            Otomatik Rol Aktif
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="autoRoleId">Verilecek Rol</label>
+                        <select name="roleId" id="autoRoleId">
+                            <option value="">Rol Seçin...</option>
+                            <% roles.forEach(role => { %>
+                                <option value="<%= role.id %>" <%= settings.autoRole?.roleId === role.id ? 'selected' : '' %>>
+                                    <%= role.name %>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+
+                    <button type="submit">Kaydet</button>
+                </form>
+            </div>
+
+            <!-- Seviye Sistemi -->
+            <div class="settings-card">
+                <h2>⭐ Seviye Sistemi</h2>
+                <form action="/server/<%= guild.id %>/settings/leveling" method="POST">
+                    <div class="form-group">
+                        <label class="checkbox">
+                            <input type="checkbox" name="enabled" <%= settings.leveling?.enabled ? 'checked' : '' %>>
+                            Seviye Sistemi Aktif
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="levelChannel">Seviye Duyuru Kanalı</label>
+                        <select name="levelChannel" id="levelChannel">
+                            <option value="">Kanal Seçin...</option>
+                            <% channels.forEach(channel => { %>
+                                <option value="<%= channel.id %>" <%= settings.leveling?.channelId === channel.id ? 'selected' : '' %>>
+                                    #<%= channel.name %>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+
+                    <button type="submit">Kaydet</button>
+                </form>
+            </div>
+
+            <!-- Çekiliş Ayarları -->
+            <div class="settings-card">
+                <h2>🎉 Çekiliş Ayarları</h2>
+                <form action="/server/<%= guild.id %>/settings/giveaway" method="POST">
+                    <div class="form-group">
+                        <label for="giveawayChannel">Varsayılan Çekiliş Kanalı</label>
+                        <select name="giveawayChannel" id="giveawayChannel">
+                            <option value="">Kanal Seçin...</option>
+                            <% channels.forEach(channel => { %>
+                                <option value="<%= channel.id %>" <%= settings.giveaway?.channelId === channel.id ? 'selected' : '' %>>
+                                    #<%= channel.name %>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+
+                    <button type="submit">Kaydet</button>
+                </form>
+            </div>
+
+            <!-- Müzik Bölümü -->
+            <div class="settings-card">
+                <h2> Müzik Durumu</h2>
+                <div id="musicStatus">
+                    <div class="current-song">
+                        <h3>Şu an çalıyor:</h3>
+                        <div id="currentSong" class="song-info">
+                            <p class="no-music">Müzik çalmıyor</p>
+                        </div>
+                    </div>
+                    <div class="queue-list">
+                        <h3>Sıradaki Şarkılar:</h3>
+                        <ul id="queueList" class="song-list">
+                            <!-- Şarkılar JavaScript ile doldurulacak -->
+                        </ul>
+                    </div>
+                    <div class="music-controls">
+                        <button onclick="controlMusic('pause')" class="control-btn pause-btn">
+                            <span class="btn-icon">⏯️</span>
+                            <span class="btn-text">Duraklat/Devam Et</span>
+                        </button>
+                        <button onclick="controlMusic('skip')" class="control-btn skip-btn">
+                            <span class="btn-icon">⏭️</span>
+                            <span class="btn-text">Sıradaki</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Uyarı Yönetimi Kartı -->
+            <div class="settings-card">
+                <h2>⚠️ Uyarı Yönetimi</h2>
+                <div class="warning-list">
+                    <div class="warning-search">
+                        <input type="text" id="warningSearch" placeholder="Kullanıcı ara..." class="search-input">
+                    </div>
+                    <div class="warning-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kullanıcı</th>
+                                    <th>Uyarı Sayısı</th>
+                                    <th>Son Uyarı</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="warningTableBody">
+                                <!-- JavaScript ile doldurulacak -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Özel Komutlar Kartı -->
+            <div class="settings-card">
+                <h2>🤖 Özel Komutlar</h2>
+                <div class="custom-commands">
+                    <div class="commands-list">
+                        <% if (settings.customCommands && settings.customCommands.length > 0) { %>
+                            <% settings.customCommands.forEach(cmd => { %>
+                                <div class="command-item">
+                                    <div class="command-info">
+                                        <span class="command-name">!<%= cmd.name %></span>
+                                        <span class="command-response"><%= cmd.response %></span>
+                                    </div>
+                                    <button onclick="deleteCommand('<%= cmd.name %>')" class="delete-btn">❌</button>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <p class="no-commands">Henüz özel komut eklenmemiş</p>
+                        <% } %>
+                    </div>
+                    
+                    <form action="/server/<%= guild.id %>/commands/add" method="POST" class="add-command-form">
+                        <div class="form-group">
+                            <input type="text" name="commandName" placeholder="Komut adı" required>
+                            <input type="text" name="commandResponse" placeholder="Komut yanıtı" required>
+                            <button type="submit">Ekle</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Susturma Ayarları Kartı -->
+            <div class="settings-card">
+                <h2>🔇 Susturma Ayarları</h2>
+                <form action="/server/<%= guild.id %>/settings/mute" method="POST">
+                    <div class="form-group">
+                        <label for="muteRole">Susturma Rolü</label>
+                        <select name="muteRole" id="muteRole">
+                            <option value="">Rol Seçin...</option>
+                            <% roles.forEach(role => { %>
+                                <option value="<%= role.id %>" 
+                                    <%= settings.moderation?.muteRole === role.id ? 'selected' : '' %>>
+                                    <%= role.name %>
+                                </option>
+                            <% }); %>
+                        </select>
+                        <button type="button" onclick="createMuteRole()" class="secondary-btn">
+                            Yeni Rol Oluştur
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Susturma Süreleri (Saat)</label>
+                        <div class="duration-inputs">
+                            <div>
+                                <label for="defaultDuration">Varsayılan Süre</label>
+                                <input type="number" id="defaultDuration" name="defaultDuration" 
+                                    value="<%= Math.floor(settings.moderation?.muteDurations?.default / 3600) || 1 %>"
+                                    min="1" max="720">
+                            </div>
+                            <div>
+                                <label for="maxDuration">Maksimum Süre</label>
+                                <input type="number" id="maxDuration" name="maxDuration" 
+                                    value="<%= Math.floor(settings.moderation?.muteDurations?.max / 3600) || 720 %>"
+                                    min="1" max="720">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit">Kaydet</button>
+                </form>
+            </div>
+
+            <!-- Üye Sayacı Kartı -->
+            <div class="settings-card">
+                <h2>👥 Üye Sayacı</h2>
+                <form action="/server/<%= guild.id %>/settings/counter" method="POST">
+                    <div class="form-group">
+                        <label for="memberCountChannel">Üye Sayacı Kanalı</label>
+                        <select name="memberCountChannel" id="memberCountChannel">
+                            <option value="">Kanal Seçin...</option>
+                            <% channels.filter(c => c.type === 2).forEach(channel => { %>
+                                <option value="<%= channel.id %>" 
+                                    <%= settings.settings?.memberCountChannel === channel.id ? 'selected' : '' %>>
+                                    <%= channel.name %>
+                                </option>
+                            <% }); %>
+                        </select>
+                        <button type="button" onclick="createCounterChannel()" class="secondary-btn">
+                            Yeni Kanal Oluştur
+                        </button>
+                    </div>
+
+                    <button type="submit">Kaydet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    async function createMuteRole() {
+        try {
+            // Butonu devre dışı bırak
+            const button = document.querySelector('button[onclick="createMuteRole()"]');
+            button.disabled = true;
+            button.textContent = 'Rol Oluşturuluyor...';
+
+            const guildId = '<%= guild.id %>';
+            const response = await fetch(`/server/${guildId}/settings/mute/create-role`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                // Rol seçim listesini güncelle
+                const muteRoleSelect = document.getElementById('muteRole');
+                const option = new Option(data.roleName, data.roleId, true, true);
+                muteRoleSelect.add(option);
+                
+                // Başarı mesajı göster
+                showAlert('success', '✅ Susturma rolü başarıyla oluşturuldu');
+            } else {
+                // Eğer rol zaten varsa, o rolü seç
+                if (data.roleId && data.roleName) {
+                    const muteRoleSelect = document.getElementById('muteRole');
+                    const existingOption = Array.from(muteRoleSelect.options).find(opt => opt.value === data.roleId);
+                    
+                    if (!existingOption) {
+                        const option = new Option(data.roleName, data.roleId, true, true);
+                        muteRoleSelect.add(option);
+                    } else {
+                        existingOption.selected = true;
+                    }
+                }
+                throw new Error(data.error || 'Rol oluşturulurken bir hata oluştu');
+            }
+        } catch (error) {
+            // Hata mesajı göster
+            showAlert('danger', `❌ ${error.message}`);
+        } finally {
+            // Butonu tekrar aktif et
+            const button = document.querySelector('button[onclick="createMuteRole()"]');
+            button.disabled = false;
+            button.textContent = 'Yeni Rol Oluştur';
+        }
+    }
+
+    // Alert gösterme fonksiyonu
+    function showAlert(type, message) {
+        // Varolan alertleri temizle
+        const existingAlerts = document.querySelectorAll('.alert');
+        existingAlerts.forEach(alert => alert.remove());
+
+        // Yeni alert oluştur
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type}`;
+        alertDiv.innerHTML = message;
+
+        // Alert'i sayfaya ekle
+        const container = document.querySelector('.container');
+        container.insertBefore(alertDiv, container.firstChild);
+
+        // 5 saniye sonra alert'i kaldır
+        setTimeout(() => {
+            alertDiv.style.opacity = '0';
+            setTimeout(() => alertDiv.remove(), 500);
+        }, 5000);
+    }
+    </script>
+</body>
+</html> 

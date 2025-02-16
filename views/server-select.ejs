@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunucu Seçin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #5865F2;
+            --bg-color: #2F3136;
+            --card-bg: #36393F;
+            --text-color: #FFFFFF;
+            --text-secondary: #B9BBBE;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .server-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .server-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .server-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .server-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
+
+        .server-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .server-action {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .server-action:hover {
+            background-color: #4752c4;
+        }
+
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="user-info">
+                <img src="https://cdn.discordapp.com/avatars/<%= user.id %>/<%= user.avatar %>.png" alt="Avatar" class="user-avatar">
+                <span><%= user.username %></span>
+            </div>
+            <a href="/logout" class="logout-btn">Çıkış Yap</a>
+        </div>
+
+        <div class="server-grid">
+            <% guilds.forEach(guild => { %>
+                <div class="server-card">
+                    <% if (guild.icon) { %>
+                        <img src="<%= guild.icon %>" alt="<%= guild.name %>" class="server-icon">
+                    <% } else { %>
+                        <div class="server-icon" style="background: #7289da; display: flex; align-items: center; justify-content: center;">
+                            <%= guild.name.charAt(0) %>
+                        </div>
+                    <% } %>
+                    <div class="server-name"><%= guild.name %></div>
+                    <% if (guild.botAdded) { %>
+                        <a href="/dashboard/<%= guild.id %>" class="server-action">Yönet</a>
+                    <% } else { %>
+                        <a href="<%= guild.inviteUrl %>" class="server-action">Botu Ekle</a>
+                    <% } %>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</body>
+</html> 

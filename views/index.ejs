@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Bot Kontrol Paneli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #5865F2;
+            --success-color: #57F287;
+            --danger-color: #ED4245;
+            --bg-color: #2F3136;
+            --card-bg: #36393F;
+            --text-color: #FFFFFF;
+            --text-secondary: #B9BBBE;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--card-bg);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #4752c4;
+            transform: translateY(-2px);
+        }
+
+        .server-list {
+            list-style: none;
+        }
+
+        .server-item {
+            padding: 0.75rem;
+            background-color: var(--bg-color);
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            text-align: center;
+            padding: 5px 10px;
+            border-radius: 6px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Discord Bot Kontrol Paneli</h1>
+            <p class="user-info">
+                Hoş geldin, <%= user.username %>#<%= user.discriminator %>
+                <a href="/logout" class="logout-button">Çıkış Yap</a>
+            </p>
+            <p>Bot durumu: <span class="status-badge status-active">Aktif</span></p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Karşılama/Uğurlama Ayarları</h2>
+                <form action="/set-channels" method="POST">
+                    <input type="hidden" name="guildId" value="<%= req.query.guild %>">
+                    <div class="form-group">
+                        <label for="welcome">Karşılama Kanalı:</label>
+                        <select name="welcome" id="welcome">
+                            <option value="">Kanal Seçin...</option>
+                            <% channels.forEach(channel => { %>
+                                <option value="<%= channel.id %>" <%= welcomeChannelId === channel.id ? 'selected' : '' %>>
+                                    <%= channel.name %> (<%= channel.guildName %>)
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="goodbye">Uğurlama Kanalı:</label>
+                        <select name="goodbye" id="goodbye">
+                            <option value="">Kanal Seçin...</option>
+                            <% channels.forEach(channel => { %>
+                                <option value="<%= channel.id %>" <%= goodbyeChannelId === channel.id ? 'selected' : '' %>>
+                                    <%= channel.name %> (<%= channel.guildName %>)
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    
+                    <button type="submit">Kanalları Kaydet</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Mesaj Gönder</h2>
+                <form action="/send-message" method="POST">
+                    <div class="form-group">
+                        <label for="channelId">Kanal:</label>
+                        <select name="channelId" id="channelId" required>
+                            <option value="">Kanal Seçin...</option>
+                            <% channels.forEach(channel => { %>
+                                <option value="<%= channel.id %>">
+                                    <%= channel.name %> (<%= channel.guildName %>)
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Mesaj:</label>
+                        <textarea id="message" name="message" rows="4" required placeholder="Mesajınızı yazın..."></textarea>
+                    </div>
+                    
+                    <button type="submit">Mesaj Gönder</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Bağlı Sunucular</h2>
+                <ul class="server-list">
+                    <% guilds.forEach(guild => { %>
+                        <li class="server-item">
+                            <span class="tooltip">
+                                <%= guild.name %>
+                                <span class="tooltip-text">ID: <%= guild.id %></span>
+                            </span>
+                            <span class="status-badge status-active">Bağlı</span>
+                        </li>
+                    <% }); %>
+                </ul>
+            </div>
+
+            <!-- Sunucu seçimi formu -->
+            <div class="form-group">
+                <label for="guildSelect">Sunucu Seçin:</label>
+                <select id="guildSelect" onchange="changeGuild(this.value)">
+                    <option value="">Sunucu Seçin...</option>
+                    <% guilds.forEach(guild => { %>
+                        <option value="<%= guild.id %>" <%= req.query.guild === guild.id ? 'selected' : '' %>>
+                            <%= guild.name %>
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function changeGuild(guildId) {
+        if (guildId) {
+            window.location.href = '/?guild=' + guildId;
+        } else {
+            window.location.href = '/';
+        }
+    }
+    </script>
+</body>
+</html> 

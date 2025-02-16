@@ -1,0 +1,488 @@
+.music-status {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.current-song {
+    background: var(--card-bg);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.current-song h3 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.song-info {
+    padding: 10px;
+    background: var(--bg-color);
+    border-radius: 5px;
+}
+
+.no-music {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.queue-list {
+    background: var(--card-bg);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.queue-list h3 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.song-list {
+    list-style: none;
+    padding: 0;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.song-list li {
+    padding: 10px;
+    background: var(--bg-color);
+    margin-bottom: 5px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.song-list li:hover {
+    background: var(--primary-color);
+}
+
+.music-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.control-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+.pause-btn {
+    background: var(--success-color);
+}
+
+.skip-btn {
+    background: var(--warning-color);
+    color: black;
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+}
+
+.btn-text {
+    font-weight: 500;
+}
+
+/* Kaydırma çubuğu stilleri */
+.song-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.song-list::-webkit-scrollbar-track {
+    background: var(--bg-color);
+    border-radius: 4px;
+}
+
+.song-list::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+.controls button {
+    margin-right: 10px;
+}
+
+.list-group-item {
+    background: #fff;
+    transition: background-color 0.2s;
+}
+
+.list-group-item:hover {
+    background: #f8f9fa;
+}
+
+/* Moderasyon Ayarları Stilleri */
+.checkbox-group {
+    background: var(--bg-color);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+    margin-bottom: 0.5rem;
+    background: var(--card-bg);
+}
+
+.checkbox:hover {
+    background: var(--primary-color);
+}
+
+.command-name {
+    font-weight: 500;
+    margin-left: 0.5rem;
+}
+
+.command-info {
+    color: var(--text-secondary);
+    margin-left: auto;
+    font-size: 0.875rem;
+}
+
+.settings-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    background: var(--bg-color);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--card-bg);
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.setting-item:hover {
+    background: var(--primary-color);
+}
+
+.setting-name {
+    font-weight: 500;
+}
+
+.small-input {
+    width: 60px !important;
+    text-align: center;
+    padding: 0.5rem;
+}
+
+.setting-item input[type="number"] {
+    background: var(--bg-color);
+    border: 1px solid var(--text-secondary);
+    border-radius: 4px;
+    color: var(--text-color);
+}
+
+/* Uyarı Yönetimi Stilleri */
+.warning-list {
+    background: var(--bg-color);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.warning-search {
+    margin-bottom: 1rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--card-bg);
+    border: 1px solid var(--text-secondary);
+    border-radius: 5px;
+    color: var(--text-color);
+}
+
+.warning-table {
+    overflow-x: auto;
+}
+
+.warning-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.warning-table th,
+.warning-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--text-secondary);
+}
+
+.warning-table th {
+    background: var(--card-bg);
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.warning-table tr:hover {
+    background: var(--card-bg);
+}
+
+.warning-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.warning-btn {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.warning-btn.reset {
+    background: var(--warning-color);
+    color: black;
+}
+
+.warning-btn.remove {
+    background: var(--danger-color);
+    color: white;
+}
+
+.warning-count {
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.warning-count.high {
+    background: var(--danger-color);
+    color: white;
+}
+
+.warning-count.medium {
+    background: var(--warning-color);
+    color: black;
+}
+
+.warning-count.low {
+    background: var(--success-color);
+    color: white;
+}
+
+.user-avatar.small {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.settings-section {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+select {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 4px;
+    background: var(--input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+/* Alert stilleri */
+.alert {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.alert-success {
+    background-color: var(--success-color);
+    color: #fff;
+    border-left: 4px solid #45a049;
+}
+
+.alert-danger {
+    background-color: var(--danger-color);
+    color: #fff;
+    border-left: 4px solid #d32f2f;
+}
+
+/* Buton yükleniyor durumu */
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.secondary-btn {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.secondary-btn:disabled::after {
+    content: '';
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 0.5rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Özel Komutlar Stili */
+.custom-commands {
+    background: var(--bg-color);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.command-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--card-bg);
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.command-info {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.command-name {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.command-response {
+    color: var(--text-secondary);
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: var(--danger-color);
+    cursor: pointer;
+    padding: 0.25rem;
+}
+
+.add-command-form {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Susturma Ayarları Stili */
+.duration-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.secondary-btn {
+    background: var(--bg-color);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+
+.secondary-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Rol oluşturma butonu için ek stiller */
+.role-create-section {
+    margin-top: 0.5rem;
+}
+
+.role-create-section .secondary-btn {
+    width: auto;
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.role-create-section .secondary-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+} 
